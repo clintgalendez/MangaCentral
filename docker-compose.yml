@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80" # Host:Container - Vite/Nginx app will be accessible on http://localhost:80
+    container_name: manga_central_frontend
+    restart: unless-stopped
+    networks:
+      - manga_network
+
+  user_service:
+    build:
+      context: ./user_service
+      dockerfile: Dockerfile
+    command: sh -c "python manage.py migrate && gunicorn project_user.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - ./user_service:/app # Mounts your local code into the container for development
+    ports:
+      - "8001:8000" # Host:Container - User service accessible on http://localhost:8001
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_USER_SERVICE_SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 user_service
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=mysql_db
+      - MYSQL_PORT=3306
+    depends_on:
+      - mysql_db
+    container_name: manga_central_user_service
+    restart: unless-stopped
+    networks:
+      - manga_network
+
+  bookmark_manager_service:
+    build:
+      context: ./bookmark_manager_service
+      dockerfile: Dockerfile
+    command: sh -c "python manage.py migrate && gunicorn project_bookmark.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - ./bookmark_manager_service:/app # Mounts your local code for development
+    ports:
+      - "8002:8000" # Host:Container - Bookmark service accessible on http://localhost:8002
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_BOOKMARK_SERVICE_SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 bookmark_manager_service
+      - MYSQL_DATABASE=${MYSQL_DATABASE} # Using the same database, but could be different
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=mysql_db
+      - MYSQL_PORT=3306
+    depends_on:
+      - mysql_db
+    container_name: manga_central_bookmark_service
+    restart: unless-stopped
+    networks:
+      - manga_network
+
+  mysql_db:
+    image: mysql:8.0
+    ports:
+      - "3307:3306" # Host:Container - MySQL accessible on port 3307 on your host for management tools
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql # Persists database data
+    container_name: manga_central_mysql_db
+    restart: unless-stopped
+    networks:
+      - manga_network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data: # Defines the named volume for MySQL data persistence
+
+networks:
+  manga_network:
+    driver: bridge

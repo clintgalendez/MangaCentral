@@ -1,0 +1,5 @@
+Django>=4.2,<5.0
+djangorestframework>=3.14,<3.15  # If you plan to build APIs
+gunicorn>=21,<22
+mysqlclient>=2.1,<2.3          # For connecting to MySQL
+python-dotenv>=1.0             # To load .env files (optional but good for Django settings)
