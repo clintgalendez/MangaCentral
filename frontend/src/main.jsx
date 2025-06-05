@@ -1,9 +1,9 @@
 // filepath: frontend/src/main.jsx
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import App from '@/App.jsx';
-import LandingPage from '@/routes/LandingPage.jsx'; // Import your LandingPage
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import App from "@/App.jsx";
+import LandingPage from "@/routes/LandingPage.jsx"; // Import your LandingPage
 
 const router = createBrowserRouter([
   {
@@ -23,8 +23,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>,
+  </StrictMode>
 );
