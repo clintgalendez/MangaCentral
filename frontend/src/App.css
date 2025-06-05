@@ -4,7 +4,7 @@
   }
   body {
     background-color: hsl(var(--background)); /* Direct fix for bg-background */
-    color: hsl(var(--foreground));           /* Direct fix for text-foreground */
+    color: hsl(var(--foreground)); /* Direct fix for text-foreground */
     font-family: "Frutiger", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   }
   button {
