@@ -19,8 +19,18 @@ export default function LandingPage() {
       <Hero />
       <Footer />
 
-      {isLoginOpen && <LoginModal setIsLoginOpen={setIsLoginOpen} />}
-      {isSignUpOpen && <SignUpModal setIsSignUpOpen={setIsSignUpOpen} />}
+      {isLoginOpen && (
+        <LoginModal
+          setIsLoginOpen={setIsLoginOpen}
+          setIsSignUpOpen={setIsSignUpOpen}
+        />
+      )}
+      {isSignUpOpen && (
+        <SignUpModal
+          setIsSignUpOpen={setIsSignUpOpen}
+          setIsLoginOpen={setIsLoginOpen}
+        />
+      )}
     </div>
   );
 }
