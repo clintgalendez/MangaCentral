@@ -3,7 +3,7 @@ import { useState } from "react";
 import { X, User, Lock, Eye, EyeOff } from "lucide-react";
 
 export default function LoginModal(props) {
-  const { setIsLoginOpen } = props;
+  const { setIsLoginOpen, setIsSignUpOpen } = props;
 
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
@@ -165,6 +165,11 @@ export default function LoginModal(props) {
               Don't have an account?{" "}
               <a
                 href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsLoginOpen(false);
+                  setIsSignUpOpen(true);
+                }}
                 className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
               >
                 Sign up
