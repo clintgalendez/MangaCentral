@@ -1,21 +1,16 @@
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 
-import { X, User, Lock, Eye, EyeOff, Mail } from "lucide-react";
+import { X, User, Lock, Eye, EyeOff, Mail, UserPlus } from "lucide-react";
 
 export default function SignUpModal(props) {
-  const { setIsSignUpOpen } = props;
+  const { setIsSignUpOpen, setIsLoginOpen } = props;
 
+  const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log("Sign up submitted");
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -67,6 +62,34 @@ export default function SignUpModal(props) {
 
             {/* Form */}
             <form className="space-y-6">
+              {/* Username Field */}
+              <div className="relative">
+                <label
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                  style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+                >
+                  Username
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <User size={18} className="text-purple-500" />
+                  </div>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 bg-gradient-to-br from-white/80 to-white/60 border-2 border-white/50 rounded-2xl focus:outline-none transition-all duration-300 shadow-inner text-gray-800 placeholder-gray-500 focus:border-purple-400"
+                    style={{
+                      fontFamily: "system-ui, -apple-system, sans-serif",
+                    }}
+                    placeholder="Enter your username"
+                    required
+                  />
+                  <div className="absolute inset-0 rounded-2xl shadow-inner pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Email Field */}
               <div className="relative animate-in slide-in-from-top-2 duration-500">
                 <label
                   className="block text-sm font-semibold text-gray-700 mb-2"
@@ -92,19 +115,108 @@ export default function SignUpModal(props) {
                   <div className="absolute inset-0 rounded-2xl shadow-inner pointer-events-none" />
                 </div>
               </div>
+
+              {/* Password Field */}
+              <div className="relative">
+                <label
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                  style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+                >
+                  Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Lock size={18} className="text-purple-500" />
+                  </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-12 pr-12 py-4 bg-gradient-to-br from-white/80 to-white/60 border-2 border-white/50 rounded-2xl focus:outline-none transition-all duration-300 shadow-inner text-gray-800 placeholder-gray-500 focus:border-purple-400"
+                    style={{
+                      fontFamily: "system-ui, -apple-system, sans-serif",
+                    }}
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center transition-colors text-purple-500 hover:text-purple-600"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                  <div className="absolute inset-0 rounded-2xl shadow-inner pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Confirm Password Field (Sign Up Only) */}
+              <div className="relative animate-in slide-in-from-top-2 duration-500">
+                <label
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                  style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+                >
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Lock size={18} className="text-purple-500" />
+                  </div>
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full pl-12 pr-12 py-4 bg-gradient-to-br from-white/80 to-white/60 border-2 border-white/50 rounded-2xl focus:border-purple-400 focus:outline-none transition-all duration-300 shadow-inner text-gray-800 placeholder-gray-500"
+                    style={{
+                      fontFamily: "system-ui, -apple-system, sans-serif",
+                    }}
+                    placeholder="Confirm your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-purple-500 hover:text-purple-600 transition-colors"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
+                  </button>
+                  <div className="absolute inset-0 rounded-2xl shadow-inner pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full py-4 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] border relative overflow-hidden bg-gradient-to-r from-purple-500 via-purple-600 to-pink-600 border-purple-400/50"
+                style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent rounded-t-2xl" />
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  <UserPlus size={20} /> Create Account
+                </span>
+              </button>
             </form>
 
-            {/* Sign Up Link */}
+            {/* Log In Link */}
             <p
               className="text-center mt-6 text-gray-600"
               style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
             >
-              Don't have an account?{" "}
+              Already have an account?{" "}
               <a
                 href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsSignUpOpen(false);
+                  setIsLoginOpen(true);
+                }}
                 className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
               >
-                Sign up
+                Log in
               </a>
             </p>
           </div>
