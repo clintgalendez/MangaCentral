@@ -1,5 +1,6 @@
 Django>=4.2,<5.0
-djangorestframework>=3.14,<3.15  # If you plan to build APIs
+djangorestframework>=3.14,<3.15
 gunicorn>=21,<22
-mysqlclient>=2.1,<2.3          # For connecting to MySQL
-python-dotenv>=1.0             # To load .env files (optional but good for Django settings)
+mysqlclient>=2.1,<2.3
+python-dotenv>=1.0
+django-cors-headers>=4.0,<5.0
