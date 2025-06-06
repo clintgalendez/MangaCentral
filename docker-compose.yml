@@ -22,7 +22,7 @@ services:
     build:
       context: ./user_service
       dockerfile: Dockerfile
-    command: sh -c "python manage.py migrate && gunicorn project_user.wsgi:application --bind 0.0.0.0:8000 --reload" # Added --reload
+    command: sh -c "pip install -r requirements.txt && python manage.py migrate && gunicorn project_user.wsgi:application --bind 0.0.0.0:8000 --reload" # Added --reload
     volumes:
       - ./user_service:/app # Mounts your local code into the container for development
     ports:
