@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "@/App.jsx";
 import LandingPage from "@/routes/LandingPage.jsx"; // Import your LandingPage
+import DashboardPage from "@/routes/DashboardPage.jsx"; // Import your DashboardPage
 
 const router = createBrowserRouter([
   {
@@ -14,11 +15,10 @@ const router = createBrowserRouter([
         index: true, // This makes LandingPage the default for the "/" path
         element: <LandingPage />,
       },
-      // You can add other routes here later, e.g.:
-      // {
-      //   path: "dashboard",
-      //   element: <Dashboard />,
-      // },
+      {
+        path: "dashboard",
+        element: <DashboardPage />,
+      },
     ],
   },
 ]);
