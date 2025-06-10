@@ -1,7 +1,7 @@
-import React, { createContext, useContext, ReactNode } from 'react';
-import { useToast as useToastHook } from '@/hooks/useToast';
-import { ToastOptions } from '@/hooks/useToast';
-import { ToastProps } from '@/components/ui/Toast';
+import React, { createContext, useContext, ReactNode } from "react";
+import { useToast as useToastHook } from "@/hooks/useToast";
+import { ToastOptions } from "@/hooks/useToast";
+import { ToastProps } from "@/components/ui/Toast";
 
 interface ToastContextType {
   toasts: ToastProps[];
@@ -15,20 +15,20 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
-export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ToastProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const toastUtils = useToastHook();
 
   return (
-    <ToastContext.Provider value={toastUtils}>
-      {children}
-    </ToastContext.Provider>
+    <ToastContext.Provider value={toastUtils}>{children}</ToastContext.Provider>
   );
 };
 
 export const useToast = (): ToastContextType => {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
+    throw new Error("useToast must be used within a ToastProvider");
   }
   return context;
 };

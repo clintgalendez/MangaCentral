@@ -1,12 +1,12 @@
-import React from 'react';
-import { BookOpen, Github, Mail, Heart } from 'lucide-react';
+import React from "react";
+import { BookOpen, Github, Mail, Heart } from "lucide-react";
 
 const Footer: React.FC = () => {
   return (
     <footer className="relative bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white">
       {/* Glass overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-black/50 to-black/30 backdrop-blur-sm"></div>
-      
+
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -19,13 +19,20 @@ const Footer: React.FC = () => {
                 <span className="text-2xl font-bold">Manga Central</span>
               </div>
               <p className="text-gray-300 text-lg leading-relaxed mb-6 max-w-md">
-                The ultimate platform for manga enthusiasts to organize their favorite series across all devices.
+                The ultimate platform for manga enthusiasts to organize their
+                favorite series across all devices.
               </p>
               <div className="flex items-center space-x-4">
-                <a href="#" className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-110">
+                <a
+                  href="#"
+                  className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-110"
+                >
                   <Github className="w-5 h-5" />
                 </a>
-                <a href="#" className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-110">
+                <a
+                  href="#"
+                  className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-110"
+                >
                   <Mail className="w-5 h-5" />
                 </a>
               </div>

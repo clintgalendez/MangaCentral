@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { apiService, SignUpRequest, SignUpResponse } from '@/services/api';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { apiService, SignUpRequest, SignUpResponse } from "@/services/api";
 
 interface User {
   id: number;
@@ -22,7 +28,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -38,9 +44,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     // Check for existing token on app load
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
@@ -51,11 +57,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signUp = async (userData: SignUpRequest) => {
     try {
       const response: SignUpResponse = await apiService.signUp(userData);
-      
+
       // Store token and user data
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user_info));
-      
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user_info));
+
       setToken(response.token);
       setUser(response.user_info);
     } catch (error) {
@@ -65,12 +71,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (username: string, password: string) => {
     try {
-      const response: SignUpResponse = await apiService.login({ username, password });
-      
+      const response: SignUpResponse = await apiService.login({
+        username,
+        password,
+      });
+
       // Store token and user data
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user_info));
-      
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user_info));
+
       setToken(response.token);
       setUser(response.user_info);
     } catch (error) {
@@ -83,11 +92,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await apiService.logout();
     } catch (error) {
       // Continue with logout even if API call fails
-      console.error('Logout API call failed:', error);
+      console.error("Logout API call failed:", error);
     } finally {
       // Clear local storage and state
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       setToken(null);
       setUser(null);
     }

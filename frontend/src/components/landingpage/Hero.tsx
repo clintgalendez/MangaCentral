@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowRight, Bookmark, Zap, Shield } from 'lucide-react';
+import React from "react";
+import { Zap } from "lucide-react";
 
 const Hero: React.FC = () => {
   return (
@@ -31,7 +31,9 @@ const Hero: React.FC = () => {
 
           {/* Subheading */}
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Stop having to guess the thumbnail of your bookmarked manga's from the browser. Save a link and the thumbnail of the manga will be shown here.
+            Stop having to guess the thumbnail of your bookmarked manga's from
+            the browser. Save a link and the thumbnail of the manga will be
+            shown here.
           </p>
         </div>
       </div>

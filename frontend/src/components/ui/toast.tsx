@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from "lucide-react";
 
-export type ToastType = 'success' | 'error' | 'warning' | 'info';
+export type ToastType = "success" | "error" | "warning" | "info";
 
 export interface ToastProps {
   id: string;
@@ -12,13 +12,13 @@ export interface ToastProps {
   onClose: (id: string) => void;
 }
 
-const Toast: React.FC<ToastProps> = ({ 
-  id, 
-  type, 
-  title, 
-  message, 
-  duration = 5000, 
-  onClose 
+const Toast: React.FC<ToastProps> = ({
+  id,
+  type,
+  title,
+  message,
+  duration = 5000,
+  onClose,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
@@ -47,42 +47,42 @@ const Toast: React.FC<ToastProps> = ({
 
   const getToastConfig = () => {
     switch (type) {
-      case 'success':
+      case "success":
         return {
           icon: CheckCircle,
-          bgGradient: 'from-green-500/20 to-emerald-500/20',
-          borderColor: 'border-green-500/30',
-          iconColor: 'text-green-600',
-          titleColor: 'text-green-800',
-          progressColor: 'bg-green-500'
+          bgGradient: "from-green-500/20 to-emerald-500/20",
+          borderColor: "border-green-500/30",
+          iconColor: "text-green-600",
+          titleColor: "text-green-800",
+          progressColor: "bg-green-500",
         };
-      case 'error':
+      case "error":
         return {
           icon: AlertCircle,
-          bgGradient: 'from-red-500/20 to-pink-500/20',
-          borderColor: 'border-red-500/30',
-          iconColor: 'text-red-600',
-          titleColor: 'text-red-800',
-          progressColor: 'bg-red-500'
+          bgGradient: "from-red-500/20 to-pink-500/20",
+          borderColor: "border-red-500/30",
+          iconColor: "text-red-600",
+          titleColor: "text-red-800",
+          progressColor: "bg-red-500",
         };
-      case 'warning':
+      case "warning":
         return {
           icon: AlertTriangle,
-          bgGradient: 'from-yellow-500/20 to-orange-500/20',
-          borderColor: 'border-yellow-500/30',
-          iconColor: 'text-yellow-600',
-          titleColor: 'text-yellow-800',
-          progressColor: 'bg-yellow-500'
+          bgGradient: "from-yellow-500/20 to-orange-500/20",
+          borderColor: "border-yellow-500/30",
+          iconColor: "text-yellow-600",
+          titleColor: "text-yellow-800",
+          progressColor: "bg-yellow-500",
         };
-      case 'info':
+      case "info":
       default:
         return {
           icon: Info,
-          bgGradient: 'from-blue-500/20 to-purple-500/20',
-          borderColor: 'border-blue-500/30',
-          iconColor: 'text-blue-600',
-          titleColor: 'text-blue-800',
-          progressColor: 'bg-blue-500'
+          bgGradient: "from-blue-500/20 to-purple-500/20",
+          borderColor: "border-blue-500/30",
+          iconColor: "text-blue-600",
+          titleColor: "text-blue-800",
+          progressColor: "bg-blue-500",
         };
     }
   };
@@ -93,22 +93,30 @@ const Toast: React.FC<ToastProps> = ({
   return (
     <div
       className={`
-        relative w-full max-w-sm bg-white/90 backdrop-blur-xl border ${config.borderColor} rounded-2xl shadow-2xl overflow-hidden
+        relative w-full max-w-sm bg-white/90 backdrop-blur-xl border ${
+          config.borderColor
+        } rounded-2xl shadow-2xl overflow-hidden
         transform transition-all duration-300 ease-out
-        ${isVisible && !isExiting ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95'}
-        ${isExiting ? 'translate-x-full opacity-0 scale-95' : ''}
+        ${
+          isVisible && !isExiting
+            ? "translate-x-0 opacity-100 scale-100"
+            : "translate-x-full opacity-0 scale-95"
+        }
+        ${isExiting ? "translate-x-full opacity-0 scale-95" : ""}
       `}
     >
       {/* Glass morphism overlay */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${config.bgGradient} rounded-2xl`} />
-      
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${config.bgGradient} rounded-2xl`}
+      />
+
       {/* Progress bar */}
       {duration > 0 && (
         <div className="absolute top-0 left-0 right-0 h-1 bg-white/20 overflow-hidden">
-          <div 
+          <div
             className={`h-full ${config.progressColor} animate-progress-bar`}
             style={{
-              animation: `progress-bar ${duration}ms linear forwards`
+              animation: `progress-bar ${duration}ms linear forwards`,
             }}
           />
         </div>
@@ -117,7 +125,9 @@ const Toast: React.FC<ToastProps> = ({
       <div className="relative z-10 p-4">
         <div className="flex items-start space-x-3">
           {/* Icon */}
-          <div className={`flex-shrink-0 p-2 bg-white/50 backdrop-blur-sm rounded-xl ${config.iconColor}`}>
+          <div
+            className={`flex-shrink-0 p-2 bg-white/50 backdrop-blur-sm rounded-xl ${config.iconColor}`}
+          >
             <IconComponent className="w-5 h-5" />
           </div>
 
@@ -127,9 +137,7 @@ const Toast: React.FC<ToastProps> = ({
               {title}
             </h4>
             {message && (
-              <p className="text-sm text-gray-600 leading-relaxed">
-                {message}
-              </p>
+              <p className="text-sm text-gray-600 leading-relaxed">{message}</p>
             )}
           </div>
 

@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { ToastProps, ToastType } from '@/components/ui/Toast';
+import { useState, useCallback } from "react";
+import { ToastProps, ToastType } from "@/components/ui/Toast";
 
 export interface ToastOptions {
   title: string;
@@ -16,32 +16,44 @@ export const useToast = () => {
       id,
       type,
       ...options,
-      onClose: () => removeToast(id)
+      onClose: () => removeToast(id),
     };
 
-    setToasts(prev => [...prev, newToast]);
+    setToasts((prev) => [...prev, newToast]);
     return id;
   }, []);
 
   const removeToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
 
-  const success = useCallback((options: ToastOptions) => {
-    return addToast('success', options);
-  }, [addToast]);
+  const success = useCallback(
+    (options: ToastOptions) => {
+      return addToast("success", options);
+    },
+    [addToast]
+  );
 
-  const error = useCallback((options: ToastOptions) => {
-    return addToast('error', options);
-  }, [addToast]);
+  const error = useCallback(
+    (options: ToastOptions) => {
+      return addToast("error", options);
+    },
+    [addToast]
+  );
 
-  const warning = useCallback((options: ToastOptions) => {
-    return addToast('warning', options);
-  }, [addToast]);
+  const warning = useCallback(
+    (options: ToastOptions) => {
+      return addToast("warning", options);
+    },
+    [addToast]
+  );
 
-  const info = useCallback((options: ToastOptions) => {
-    return addToast('info', options);
-  }, [addToast]);
+  const info = useCallback(
+    (options: ToastOptions) => {
+      return addToast("info", options);
+    },
+    [addToast]
+  );
 
   const clear = useCallback(() => {
     setToasts([]);
@@ -54,6 +66,6 @@ export const useToast = () => {
     warning,
     info,
     removeToast,
-    clear
+    clear,
   };
 };

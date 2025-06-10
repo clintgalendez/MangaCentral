@@ -1,8 +1,8 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from '@/contexts/AuthContext';
-import LandingPage from '@/routes/LandingPage';
-import { ToastProvider, useToast } from '@/contexts/ToastContext';
-import ToastContainer from '@/components/ui/ToastContainter';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import LandingPage from "@/routes/LandingPage";
+import { ToastProvider, useToast } from "@/contexts/ToastContext";
+import ToastContainer from "@/components/ui/ToastContainter";
 
 function AppContent() {
   const { toasts, removeToast } = useToast();

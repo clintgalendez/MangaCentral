@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8001/api/user';
+const API_BASE_URL = "http://localhost:8001/api/user";
 
 export interface SignUpRequest {
   username: string;
@@ -29,10 +29,10 @@ class ApiService {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
-    
+
     const config: RequestInit = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers,
       },
       ...options,
@@ -44,7 +44,7 @@ class ApiService {
 
       if (!response.ok) {
         throw {
-          message: data.error || 'Something went wrong',
+          message: data.error || "Something went wrong",
           errors: data,
         } as ApiError;
       }
@@ -54,7 +54,7 @@ class ApiService {
       if (error instanceof TypeError) {
         // Network error
         throw {
-          message: 'Network error. Please check your connection.',
+          message: "Network error. Please check your connection.",
         } as ApiError;
       }
       throw error;
@@ -62,23 +62,26 @@ class ApiService {
   }
 
   async signUp(userData: SignUpRequest): Promise<SignUpResponse> {
-    return this.request<SignUpResponse>('/register/', {
-      method: 'POST',
+    return this.request<SignUpResponse>("/register/", {
+      method: "POST",
       body: JSON.stringify(userData),
     });
   }
 
-  async login(credentials: { username: string; password: string }): Promise<SignUpResponse> {
-    return this.request<SignUpResponse>('/login/', {
-      method: 'POST',
+  async login(credentials: {
+    username: string;
+    password: string;
+  }): Promise<SignUpResponse> {
+    return this.request<SignUpResponse>("/login/", {
+      method: "POST",
       body: JSON.stringify(credentials),
     });
   }
 
   async logout(): Promise<void> {
-    const token = localStorage.getItem('token');
-    return this.request<void>('/logout/', {
-      method: 'POST',
+    const token = localStorage.getItem("token");
+    return this.request<void>("/logout/", {
+      method: "POST",
       headers: {
         Authorization: `Token ${token}`,
       },

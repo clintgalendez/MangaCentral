@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import Navigation from '@/components/landingpage/Navigation';
-import Hero from '@/components/landingpage/Hero';
-import Footer from '@/components/landingpage/Footer';
-import LoginModal from '@/components/landingpage/LoginModal';
-import SignupModal from '@/components/landingpage/SignUpModal'; // Corrected import name to match file
+import React, { useState } from "react";
+import Navigation from "@/components/landingpage/Navigation";
+import Hero from "@/components/landingpage/Hero";
+import Footer from "@/components/landingpage/Footer";
+import LoginModal from "@/components/landingpage/LoginModal";
+import SignupModal from "@/components/landingpage/SignUpModal"; // Corrected import name to match file
 
 const LandingPage: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -27,18 +27,22 @@ const LandingPage: React.FC = () => {
 
   return (
     <>
-      <Navigation onLoginClick={openLoginModal} onSignUpClick={openSignupModal} /> {/* Pass onSignUpClick */}
+      <Navigation
+        onLoginClick={openLoginModal}
+        onSignUpClick={openSignupModal}
+      />{" "}
+      {/* Pass onSignUpClick */}
       <Hero />
       <Footer />
-      <LoginModal 
-        isOpen={isLoginModalOpen} 
-        onClose={closeLoginModal} 
-        onSwitchToSignup={switchToSignup} 
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={closeLoginModal}
+        onSwitchToSignup={switchToSignup}
       />
-      <SignupModal 
-        isOpen={isSignupModalOpen} 
-        onClose={closeSignupModal} 
-        onSwitchToLogin={switchToLogin} 
+      <SignupModal
+        isOpen={isSignupModalOpen}
+        onClose={closeSignupModal}
+        onSwitchToLogin={switchToLogin}
       />
     </>
   );
