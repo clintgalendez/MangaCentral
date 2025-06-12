@@ -5,7 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { apiService, SignUpRequest, SignUpResponse } from "@/services/api";
+import { authenticationService, SignUpRequest, SignUpResponse } from "@/services/AuthenticationService";
 
 interface User {
   id: number;
@@ -56,11 +56,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signUp = async (userData: SignUpRequest) => {
     try {
-      const response: SignUpResponse = await apiService.signUp(userData);
+      const response: SignUpResponse = await authenticationService.signUp(userData);
 
       // Store token and user data
       localStorage.setItem("token", response.token);
       localStorage.setItem("user", JSON.stringify(response.user_info));
+      localStorage.setItem("user_id", response.user_info.id.toString()); // Add this line
 
       setToken(response.token);
       setUser(response.user_info);
@@ -72,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (username: string, password: string) => {
     try {
       // The backend expects username
-      const response: SignUpResponse = await apiService.login({
+      const response: SignUpResponse = await authenticationService.login({
         username,
         password,
       });
@@ -80,6 +81,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Store token and user data
       localStorage.setItem("token", response.token);
       localStorage.setItem("user", JSON.stringify(response.user_info));
+      localStorage.setItem("user_id", response.user_info.id.toString()); // Add this line
 
       setToken(response.token);
       setUser(response.user_info);
@@ -90,7 +92,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
-      await apiService.logout();
+      await authenticationService.logout();
     } catch (error) {
       // Continue with logout even if API call fails
       console.error("Logout API call failed:", error);
@@ -98,6 +100,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Clear local storage and state
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("user_id"); // Add this line
       setToken(null);
       setUser(null);
     }
