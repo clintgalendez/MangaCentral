@@ -32,10 +32,17 @@ def verify_user_exists(user_id):
 
 class BookmarkListCreateView(generics.ListCreateAPIView):
     serializer_class = BookmarkSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     def get_queryset(self):
-        user_id = get_user_id_from_request(self.request)
-        return Bookmark.objects.filter(user_id=user_id)
+        user_id = self.request.query_params.get('user_id')
+        if user_id:
+            return Bookmark.objects.filter(user_id=user_id).order_by('-created_at')
+        return Bookmark.objects.none()
     
     def create(self, request, *args, **kwargs):
         try:
@@ -125,7 +132,7 @@ class BookmarkListCreateView(generics.ListCreateAPIView):
         
         if result.success:
             return Response(
-                BookmarkSerializer(bookmark).data,
+                BookmarkSerializer(bookmark, context={'request': request}).data,
                 status=status.HTTP_201_CREATED
             )
         else:
@@ -133,7 +140,7 @@ class BookmarkListCreateView(generics.ListCreateAPIView):
                 {
                     "error": "Failed to scrape manga info",
                     "details": result.error_message,
-                    "bookmark": BookmarkSerializer(bookmark).data
+                    "bookmark": BookmarkSerializer(bookmark, context={'request': request}).data
                 },
                 status=status.HTTP_206_PARTIAL_CONTENT
             )
