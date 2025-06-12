@@ -2,14 +2,20 @@ from rest_framework import serializers
 from .models import Bookmark, SupportedSite
 
 class BookmarkSerializer(serializers.ModelSerializer):
-    site_name = serializers.CharField(source='site.name', read_only=True)
+    thumbnail_url = serializers.SerializerMethodField()
     
     class Meta:
         model = Bookmark
-        fields = ['id', 'url', 'title', 'thumbnail', 'thumbnail_url', 
-                 'site_name', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'title', 'thumbnail', 'thumbnail_url', 
-                           'site_name', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'url', 'thumbnail_url', 'created_at']
+    
+    def get_thumbnail_url(self, obj):
+        # Prioritize locally stored thumbnail
+        if obj.thumbnail and hasattr(obj.thumbnail, 'url'):
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.thumbnail.url)
+        # Fallback to external URL only if no local thumbnail exists
+        return obj.thumbnail_url
 
 class BookmarkCreateSerializer(serializers.Serializer):
     url = serializers.URLField()
