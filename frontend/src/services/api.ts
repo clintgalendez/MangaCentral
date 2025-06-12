@@ -80,12 +80,43 @@ class ApiService {
 
   async logout(): Promise<void> {
     const token = localStorage.getItem("token");
-    return this.request<void>("/logout/", {
+    const url = `${API_BASE_URL}/logout/`;
+
+    const config: RequestInit = {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Token ${token}`,
       },
-    });
+    };
+
+    try {
+      const response = await fetch(url, config);
+
+      if (!response.ok) {
+        // Try to get error message if there's content
+        let errorMessage = "Logout failed";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          // Ignore JSON parsing error for logout
+        }
+        throw {
+          message: errorMessage,
+        } as ApiError;
+      }
+
+      // Don't try to parse JSON for successful logout
+      return;
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw {
+          message: "Network error. Please check your connection.",
+        } as ApiError;
+      }
+      throw error;
+    }
   }
 }
 
