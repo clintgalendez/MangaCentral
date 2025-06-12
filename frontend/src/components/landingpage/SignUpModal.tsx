@@ -3,7 +3,7 @@ import { X, Mail, Lock, Eye, EyeOff, User, UserPlus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/contexts/ToastContext";
 import { useFormValidation } from "@/hooks/useFormValidation";
-import { ApiError } from "@/services/api";
+import { ApiError } from "@/services/AuthenticationService";
 
 interface SignupModalProps {
   isOpen: boolean;
