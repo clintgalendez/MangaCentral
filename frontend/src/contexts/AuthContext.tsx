@@ -71,6 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (username: string, password: string) => {
     try {
+      // The backend expects username
       const response: SignUpResponse = await apiService.login({
         username,
         password,
