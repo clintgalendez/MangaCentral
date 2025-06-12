@@ -231,6 +231,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
                       errors.username ? "border-red-500/50" : "border-white/30"
                     }`}
                     placeholder="Enter a unique username"
+                    autoComplete="username"
                     required
                   />
                 </div>
@@ -260,6 +261,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
                       errors.email ? "border-red-500/50" : "border-white/30"
                     }`}
                     placeholder="Enter your email"
+                    autoComplete="email"
                     required
                   />
                 </div>
@@ -291,6 +293,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
                       errors.password ? "border-red-500/50" : "border-white/30"
                     }`}
                     placeholder="Create a strong password"
+                    autoComplete="new-password"
                     required
                   />
                   <button
@@ -358,6 +361,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
                         : "border-white/30"
                     }`}
                     placeholder="Confirm your password"
+                    autoComplete="new-password"
                     required
                   />
                   <button
