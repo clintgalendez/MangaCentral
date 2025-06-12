@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { X, Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
+import { X, User, Lock, Eye, EyeOff, LogIn } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/contexts/ToastContext";
+import { ApiError } from "@/services/api";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -12,7 +15,10 @@ const LoginModal: React.FC<LoginModalProps> = ({
   onClose,
   onSwitchToSignup,
 }) => {
-  const [email, setEmail] = useState("");
+  const { login } = useAuth();
+  const { success, error } = useToast();
+
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,14 +26,46 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!username || !password) {
+      error({
+        title: "Validation Error",
+        message: "Please fill in all fields",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      await login(username, password);
 
-    setIsLoading(false);
-    // Handle login logic here
-    console.log("Login attempt:", { email, password, rememberMe });
+      success({
+        title: "Login Successful!",
+        message: "Welcome back to Manga Central!",
+      });
+
+      // Clear form and close modal
+      setUsername("");
+      setPassword("");
+      setRememberMe(false);
+      onClose();
+    } catch (err) {
+      const apiError = err as ApiError;
+      error({
+        title: "Login Failed",
+        message: apiError.message || "Invalid credentials. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    setUsername("");
+    setPassword("");
+    setRememberMe(false);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -37,7 +75,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       {/* Modal */}
@@ -56,7 +94,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                 </p>
               </div>
               <button
-                onClick={onClose}
+                onClick={handleClose}
                 className="p-2 hover:bg-white/50 rounded-lg transition-all duration-200 hover:scale-110"
               >
                 <X className="w-5 h-5 text-gray-500" />
@@ -67,25 +105,26 @@ const LoginModal: React.FC<LoginModalProps> = ({
           {/* Form */}
           <div className="p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email Field */}
+              {/* Username Field */}
               <div className="space-y-2">
                 <label
-                  htmlFor="email"
+                  htmlFor="username"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Email Address
+                  Username
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
+                    <User className="h-5 w-5 text-gray-400" />
                   </div>
                   <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 bg-white/60 border border-white/30 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 placeholder-gray-500"
-                    placeholder="Enter your email"
+                    placeholder="Enter your username"
+                    autoComplete="username"
                     required
                   />
                 </div>
@@ -110,6 +149,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full pl-10 pr-12 py-3 bg-white/60 border border-white/30 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 placeholder-gray-500"
                     placeholder="Enter your password"
+                    autoComplete="current-password"
                     required
                   />
                   <button
