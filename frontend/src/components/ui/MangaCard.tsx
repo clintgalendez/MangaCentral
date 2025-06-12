@@ -25,6 +25,16 @@ const MangaCard: React.FC<MangaCardProps> = ({
     }
   };
 
+const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const target = e.target as HTMLImageElement;
+  console.error('Failed to load image:', target.src); // Add logging
+  target.style.display = 'none';
+  const fallback = target.nextElementSibling as HTMLElement;
+  if (fallback) {
+    fallback.classList.remove('hidden');
+  }
+};
+
   return (
     <div
       className={`group relative bg-white/90 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer overflow-hidden ${className}`}
@@ -32,23 +42,30 @@ const MangaCard: React.FC<MangaCardProps> = ({
     >
       {/* Thumbnail Container */}
       <div className="relative aspect-[3/4] overflow-hidden rounded-t-2xl bg-gradient-to-br from-gray-100 to-gray-200">
-        {thumbnail ? (
-          <img
-            src={thumbnail || "/placeholder.svg"}
-            alt={title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={(e) => {
-              // Fallback to placeholder if image fails to load
-              const target = e.target as HTMLImageElement;
-              target.src = `/placeholder.svg?height=400&width=300&text=${encodeURIComponent(
-                title
-              )}`;
-            }}
-          />
+        {thumbnail && thumbnail !== '/placeholder.svg' ? (
+          <>
+            <img
+              src={thumbnail}
+              alt={title}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={handleImageError}
+              onLoad={() => console.log('Image loaded successfully:', thumbnail)} // Add success logging
+            />
+            {/* Fallback placeholder - hidden by default */}
+            <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+              <div className="text-center">
+                <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                <p className="text-xs text-gray-500 px-2 leading-tight">{title}</p>
+              </div>
+            </div>
+          </>
         ) : (
-          // Placeholder when no thumbnail
+          // Default placeholder when no thumbnail
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
-            <BookOpen className="w-16 h-16 text-gray-400" />
+            <div className="text-center">
+              <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+              <p className="text-xs text-gray-500 px-2 leading-tight">{title}</p>
+            </div>
           </div>
         )}
 
