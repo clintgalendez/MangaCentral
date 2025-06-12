@@ -47,16 +47,17 @@ services:
     build:
       context: ./bookmark_manager_service
       dockerfile: Dockerfile
-    command: sh -c "pip install -r requirements.txt && python manage.py migrate && gunicorn project_bookmark.wsgi:application --bind 0.0.0.0:8000 --reload" # Added --reload
+    command: sh -c "pip install -r requirements.txt && python manage.py migrate && gunicorn project_bookmark.wsgi:application --bind 0.0.0.0:8000 --reload"
     volumes:
-      - ./bookmark_manager_service:/app # Mounts your local code for development
+      - ./bookmark_manager_service:/app # Keep for code hot-reload
+      - bookmark_media:/app/media      # Separate named volume for media files
     ports:
-      - "8002:8000" # Host:Container - Bookmark service accessible on http://localhost:8002
+      - "8002:8000"
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_BOOKMARK_SERVICE_SECRET_KEY}
       - DEBUG=${DEBUG}
       - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 bookmark_manager_service
-      - MYSQL_DATABASE=${MYSQL_DATABASE} # Using the same database, but could be different
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_HOST=mysql_db
@@ -91,6 +92,7 @@ services:
 
 volumes:
   mysql_data: # Defines the named volume for MySQL data persistence
+  bookmark_media: # New named volume for media files
 
 networks:
   manga_network:
