@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { X, User, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/contexts/ToastContext";
-import { ApiError } from "@/services/api";
+import { ApiError } from "@/services/AuthenticationService";
 
 interface LoginModalProps {
   isOpen: boolean;
