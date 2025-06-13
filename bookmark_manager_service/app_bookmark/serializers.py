@@ -9,12 +9,10 @@ class BookmarkSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'url', 'thumbnail_url', 'created_at']
     
     def get_thumbnail_url(self, obj):
-        # Prioritize locally stored thumbnail
         if obj.thumbnail and hasattr(obj.thumbnail, 'url'):
             request = self.context.get('request')
             if request:
                 return request.build_absolute_uri(obj.thumbnail.url)
-        # Fallback to external URL only if no local thumbnail exists
         return obj.thumbnail_url
 
 class BookmarkCreateSerializer(serializers.Serializer):

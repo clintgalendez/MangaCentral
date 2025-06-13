@@ -38,21 +38,13 @@ class AuthenticationService {
       ...options,
     };
 
-    console.log('Making request to:', url); // Debug line
-    console.log('Request config:', config); // Debug line
-
     try {
       const response = await fetch(url, config);
-      
-      console.log('Response status:', response.status); // Debug line
-      console.log('Response headers:', response.headers); // Debug line
       
       let data;
       try {
         data = await response.json();
-        console.log('Response data:', data); // Debug line
       } catch (jsonError) {
-        console.error('Failed to parse JSON:', jsonError);
         throw {
           message: "Invalid response format from server",
         } as ApiError;
@@ -67,7 +59,6 @@ class AuthenticationService {
 
       return data;
     } catch (error) {
-      console.error('Request error:', error); // Debug line
       if (error instanceof TypeError) {
         // Network error
         throw {

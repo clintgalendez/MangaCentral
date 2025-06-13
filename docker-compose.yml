@@ -5,16 +5,14 @@ services:
     build: ./frontend
     container_name: manga_central_frontend
     ports:
-      - "5173:5173" # Vite default port
+      - "5173:5173"
     volumes:
-      - ./frontend:/app        # Mount the entire frontend directory
-      - /app/node_modules    # Anonymous volume to prevent local node_modules from overwriting container's
+      - ./frontend:/app 
+      - /app/node_modules 
     environment:
-      - CHOKIDAR_USEPOLLING=true # Helps with file watching in some Docker setups
-      - WDS_SOCKET_PORT=5173 # For Vite HMR through proxies if needed
-    # The command to start Vite's dev server
-    # Ensure your package.json has a "dev" script like "vite" or "vite --host"
-    command: npm run dev -- --host # `--host` makes it accessible externally
+      - CHOKIDAR_USEPOLLING=true
+      - WDS_SOCKET_PORT=5173
+    command: npm run dev -- --host
     networks:
       - manga_network
 
@@ -24,9 +22,9 @@ services:
       dockerfile: Dockerfile
     command: sh -c "pip install -r requirements.txt && python manage.py migrate && gunicorn project_user.wsgi:application --bind 0.0.0.0:8000 --reload" # Added --reload
     volumes:
-      - ./user_service:/app # Mounts your local code into the container for development
+      - ./user_service:/app 
     ports:
-      - "8001:8000" # Host:Container - User service accessible on http://localhost:8001
+      - "8001:8000"
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_USER_SERVICE_SECRET_KEY}
       - DEBUG=${DEBUG}
@@ -49,8 +47,8 @@ services:
       dockerfile: Dockerfile
     command: sh -c "pip install -r requirements.txt && python manage.py migrate && gunicorn project_bookmark.wsgi:application --bind 0.0.0.0:8000 --reload"
     volumes:
-      - ./bookmark_manager_service:/app # Keep for code hot-reload
-      - bookmark_media:/app/media      # Separate named volume for media files
+      - ./bookmark_manager_service:/app 
+      - bookmark_media:/app/media   
     ports:
       - "8002:8000"
     environment:
@@ -107,14 +105,14 @@ services:
   mysql_db:
     image: mysql:8.0
     ports:
-      - "3307:3306" # Host:Container - MySQL accessible on port 3307 on your host for management tools
+      - "3307:3306" 
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - mysql_data:/var/lib/mysql # Persists database data
+      - mysql_data:/var/lib/mysql
     container_name: manga_central_mysql_db
     restart: unless-stopped
     networks:
@@ -126,8 +124,8 @@ services:
       retries: 5
 
 volumes:
-  mysql_data: # Defines the named volume for MySQL data persistence
-  bookmark_media: # New named volume for media files
+  mysql_data:
+  bookmark_media:
 
 networks:
   manga_network:

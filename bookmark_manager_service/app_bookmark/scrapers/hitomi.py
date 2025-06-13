@@ -67,7 +67,6 @@ class HitomiScraper(BaseMangaScraper):
             thumbnail_url = None
             thumbnail_data = None
 
-            # Scrape title
             try:
                 print("[DEBUG] Attempting to find title element...")
                 gallery_brand = self.driver.find_element(By.ID, "gallery-brand")
@@ -77,7 +76,6 @@ class HitomiScraper(BaseMangaScraper):
             except NoSuchElementException:
                 print("[ERROR] Title element not found")
 
-            # Scrape thumbnail using browser context
             try:
                 print("[DEBUG] Attempting to find thumbnail element...")
                 thumbnail_element = self.driver.find_element(By.ID, "bigtn_img")

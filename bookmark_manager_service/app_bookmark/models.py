@@ -24,11 +24,11 @@ class SupportedSite(models.Model):
 class Bookmark(models.Model):
     """Model to store user bookmarks with scraped data"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.IntegerField()  # Reference to user from user_service
+    user_id = models.IntegerField() 
     url = models.URLField(validators=[URLValidator()])
     title = models.CharField(max_length=500)
     thumbnail = models.ImageField(upload_to=bookmark_thumbnail_path, null=True, blank=True)
-    thumbnail_url = models.URLField(null=True, blank=True)  # Original thumbnail URL
+    thumbnail_url = models.URLField(null=True, blank=True) 
     site = models.ForeignKey(SupportedSite, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

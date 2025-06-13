@@ -50,7 +50,6 @@ class BookmarkListCreateView(generics.ListCreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Verify user exists
         if not verify_user_exists(user_id):
             return Response(
                 {"error": "User not found"},
@@ -63,7 +62,6 @@ class BookmarkListCreateView(generics.ListCreateAPIView):
 
         url = serializer.validated_data['url']
 
-        # Check if bookmark already exists for this user and URL
         existing_bookmark = Bookmark.objects.filter(user_id=user_id, url=url).first()
         if existing_bookmark:
             return Response(
@@ -71,7 +69,6 @@ class BookmarkListCreateView(generics.ListCreateAPIView):
                 status=status.HTTP_200_OK
             )
 
-        # Queue the scraping task with Celery
         task = scrape_manga_info_task.delay(user_id, url)
         return Response(
             {"detail": "Scraping started", "task_id": task.id},
@@ -117,7 +114,6 @@ def refresh_bookmark(request, bookmark_id):
 
     bookmark = get_object_or_404(Bookmark, id=bookmark_id, user_id=user_id)
 
-    # Queue the scraping task with Celery for refresh
     task = scrape_manga_info_task.delay(user_id, bookmark.url, str(bookmark.id))
     return Response(
         {"detail": "Refresh started", "task_id": task.id},

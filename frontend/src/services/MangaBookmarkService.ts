@@ -1,18 +1,18 @@
-const API_BASE_URL = 'http://localhost:8002'; // Adjust this to your bookmark service URL
+const API_BASE_URL = 'http://localhost:8002';
 
 interface MangaBookmark {
-  id: string; // Change from number to string to match your UUID
+  id: string; 
   title: string;
   url: string;
   thumbnail?: string;
   thumbnail_url?: string;
-  site_name?: string; // Add this field
+  site_name?: string;
   created_at: string;
-  updated_at: string; // Add this field
+  updated_at: string;
 }
 
 interface AddMangaResponse {
-  id: string; // Change from number to string
+  id: string;
   title: string;
   url: string;
   thumbnail?: string;
