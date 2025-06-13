@@ -1,14 +1,15 @@
 import type React from "react"
 import { useState } from "react"
 import LinkInput from "@/components/ui/LinkInput"
-import { BookOpen, Sparkles } from "lucide-react"
+import { BookOpen, Sparkles, HelpCircle } from "lucide-react"
 
 interface AddMangaFormProps {
   onAddManga: (url: string) => Promise<void>
+  onShowSupportedSites: () => void
   className?: string
 }
 
-const AddMangaForm: React.FC<AddMangaFormProps> = ({ onAddManga, className = "" }) => {
+const AddMangaForm: React.FC<AddMangaFormProps> = ({ onAddManga, onShowSupportedSites, className = "" }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -60,10 +61,18 @@ const AddMangaForm: React.FC<AddMangaFormProps> = ({ onAddManga, className = "" 
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">Pro Tips</h3>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Works with most manga reading websites</li>
                 <li>• We'll automatically extract the title and thumbnail</li>
                 <li>• Your bookmarks are saved securely in your account</li>
               </ul>
+
+              {/* Supported Sites Button */}
+              <button
+                onClick={onShowSupportedSites}
+                className="mt-4 inline-flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200"
+              >
+                <HelpCircle className="w-4 h-4" />
+                <span>View supported manga sites</span>
+              </button>
             </div>
           </div>
         </div>

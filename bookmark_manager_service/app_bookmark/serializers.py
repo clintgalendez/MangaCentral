@@ -35,4 +35,4 @@ class BookmarkCreateSerializer(serializers.Serializer):
 class SupportedSiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupportedSite
-        fields = ['name', 'domain', 'is_active']
+        fields = ['name', 'domain', 'is_active', 'description']  # <-- Add 'description'

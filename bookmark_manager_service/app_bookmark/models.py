@@ -15,6 +15,7 @@ class SupportedSite(models.Model):
     domain = models.CharField(max_length=255, unique=True)
     scraper_class = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
+    description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

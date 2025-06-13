@@ -1,5 +1,5 @@
 import React from "react";
-import { Zap } from "lucide-react";
+import { Zap, Share, Bookmark, Search } from "lucide-react";
 
 const Hero: React.FC = () => {
   return (
@@ -17,7 +17,7 @@ const Hero: React.FC = () => {
           {/* Badge */}
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-8 shadow-lg">
             <Zap className="w-4 h-4" />
-            <span>Centralize Your Manga Collection</span>
+            <span>Collect all your manga in one place</span>
           </div>
 
           {/* Main Heading */}
@@ -31,10 +31,24 @@ const Hero: React.FC = () => {
 
           {/* Subheading */}
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Stop having to guess the thumbnail of your bookmarked manga's from
-            the browser. Save a link and the thumbnail of the manga will be
-            shown here.
+            Your personal manga collection manager. Save, organize, and discover mangas from across the web in one convenient place.
           </p>
+        </div>
+
+        {/* Feature Pills */}
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
+            <Bookmark className="w-4 h-4 text-blue-500" />
+            <span className="text-sm font-medium text-gray-700">Collect</span>
+          </div>
+          <div className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
+            <Share className="w-4 h-4 text-purple-500" />
+            <span className="text-sm font-medium text-gray-700">Share</span>
+          </div>
+          <div className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
+            <Search className="w-4 h-4 text-green-500" />
+            <span className="text-sm font-medium text-gray-700">Explore</span>
+          </div>
         </div>
       </div>
     </section>

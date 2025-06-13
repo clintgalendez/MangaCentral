@@ -12,6 +12,7 @@ class BookmarkAdmin(admin.ModelAdmin):
 class SupportedSiteAdmin(admin.ModelAdmin):
     list_display = ['name', 'domain', 'is_active', 'created_at']
     list_filter = ['is_active']
+    search_fields = ['name', 'domain', 'description']
 
 @admin.register(ScrapingLog)
 class ScrapingLogAdmin(admin.ModelAdmin):

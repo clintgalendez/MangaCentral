@@ -69,6 +69,41 @@ services:
     networks:
       - manga_network
 
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    container_name: manga_central_redis
+    restart: unless-stopped
+    networks:
+      - manga_network
+
+  celery_worker:
+    build:
+      context: ./bookmark_manager_service
+      dockerfile: Dockerfile
+    command: celery -A project_bookmark worker --loglevel=info
+    volumes:
+      - ./bookmark_manager_service:/app
+      - bookmark_media:/app/media
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_BOOKMARK_SERVICE_SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 bookmark_manager_service
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=mysql_db
+      - MYSQL_PORT=3306
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - mysql_db
+      - redis
+    container_name: manga_central_celery_worker
+    restart: unless-stopped
+    networks:
+      - manga_network
+
   mysql_db:
     image: mysql:8.0
     ports:

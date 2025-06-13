@@ -1,39 +1,42 @@
-import type React from "react";
-import { ExternalLink, BookOpen } from "lucide-react";
+import type React from "react"
+import { ExternalLink, BookOpen, Trash2 } from "lucide-react"
 
 interface MangaCardProps {
-  id?: string | number;
-  title: string;
-  thumbnail: string;
-  url?: string;
-  onClick?: () => void;
-  className?: string;
+  id?: string | number
+  title: string
+  thumbnail: string
+  url?: string
+  onClick?: () => void
+  onDelete?: () => void
+  className?: string
 }
 
-const MangaCard: React.FC<MangaCardProps> = ({
-  title,
-  thumbnail,
-  url,
-  onClick,
-  className = "",
-}) => {
+const MangaCard: React.FC<MangaCardProps> = ({ title, thumbnail, url, onClick, onDelete, className = "" }) => {
   const handleClick = () => {
     if (onClick) {
-      onClick();
+      onClick()
     } else if (url) {
-      window.open(url, "_blank", "noopener,noreferrer");
+      window.open(url, "_blank", "noopener,noreferrer")
     }
-  };
-
-const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-  const target = e.target as HTMLImageElement;
-  console.error('Failed to load image:', target.src); // Add logging
-  target.style.display = 'none';
-  const fallback = target.nextElementSibling as HTMLElement;
-  if (fallback) {
-    fallback.classList.remove('hidden');
   }
-};
+
+  // Add a function to handle delete button click
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent triggering the card click
+    if (onDelete) {
+      onDelete()
+    }
+  }
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement
+    console.error("Failed to load image:", target.src) // Add logging
+    target.style.display = "none"
+    const fallback = target.nextElementSibling as HTMLElement
+    if (fallback) {
+      fallback.classList.remove("hidden")
+    }
+  }
 
   return (
     <div
@@ -42,14 +45,13 @@ const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     >
       {/* Thumbnail Container */}
       <div className="relative aspect-[3/4] overflow-hidden rounded-t-2xl bg-gradient-to-br from-gray-100 to-gray-200">
-        {thumbnail && thumbnail !== '/placeholder.svg' ? (
+        {thumbnail && thumbnail !== "/placeholder.svg" ? (
           <>
             <img
-              src={thumbnail}
+              src={thumbnail || "/placeholder.svg"}
               alt={title}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               onError={handleImageError}
-              onLoad={() => console.log('Image loaded successfully:', thumbnail)} // Add success logging
             />
             {/* Fallback placeholder - hidden by default */}
             <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
@@ -78,6 +80,16 @@ const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
             <ExternalLink className="w-4 h-4 text-white" />
           </div>
         )}
+
+        {/* Delete button - new addition */}
+        {onDelete && (
+          <div
+            className="absolute top-3 left-3 p-2 bg-red-500/70 backdrop-blur-sm rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-600/90 hover:scale-110"
+            onClick={handleDelete}
+          >
+            <Trash2 className="w-4 h-4 text-white" />
+          </div>
+        )}
       </div>
 
       {/* Title Section */}
@@ -90,7 +102,7 @@ const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
       {/* Glass morphism hover effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
     </div>
-  );
-};
+  )
+}
 
-export default MangaCard;
+export default MangaCard

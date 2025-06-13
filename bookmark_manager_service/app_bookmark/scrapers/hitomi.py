@@ -1,9 +1,6 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-from selenium.webdriver.chrome.service import Service
+from .webdriver_manager import SingletonWebDriver
 import time
 import base64
 from .base import BaseMangaScraper, ScrapingResult
@@ -22,29 +19,7 @@ class HitomiScraper(BaseMangaScraper):
         return "hitomi.la"
 
     def _setup_driver(self):
-        """Setup Chrome WebDriver with appropriate options"""
-        print("[DEBUG] Setting up Chrome WebDriver...")
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Uncomment for headless mode
-        chrome_options.page_load_strategy = "eager"
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-        # Use system chromedriver (Docker/production best practice)
-        service = Service('/usr/local/bin/chromedriver')
-        self.driver = webdriver.Chrome(service=service, options=chrome_options)
-        self.driver.set_page_load_timeout(30)
-        print("[DEBUG] Chrome WebDriver setup complete.")
-
-    def _cleanup_driver(self):
-        """Clean up WebDriver"""
-        print("[DEBUG] Cleaning up WebDriver...")
-        if self.driver:
-            self.driver.quit()
-            self.driver = None
-        print("[DEBUG] WebDriver cleanup complete.")
+        self.driver = SingletonWebDriver.get_driver()
 
     def _fetch_image_bytes_browser_context(self, image_url: str) -> bytes | None:
         """
@@ -142,5 +117,3 @@ class HitomiScraper(BaseMangaScraper):
                 success=False,
                 error_message=f"Scraping error: {str(e)}"
             )
-        finally:
-            self._cleanup_driver()

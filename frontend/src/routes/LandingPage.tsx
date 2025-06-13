@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navigation from "@/components/landingpage/Navigation";
 import Hero from "@/components/landingpage/Hero";
-import Footer from "@/components/landingpage/Footer";
+import Footer from "@/components/global/Footer";
 import LoginModal from "@/components/landingpage/LoginModal";
 import SignupModal from "@/components/landingpage/SignUpModal"; // Corrected import name to match file
 

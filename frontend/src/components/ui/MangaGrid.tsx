@@ -1,39 +1,34 @@
-import type React from "react";
-import MangaCard from "@/components/ui/MangaCard";
+import type React from "react"
+import MangaCard from "@/components/ui/MangaCard"
 
 interface MangaItem {
-  id: string | number;
-  title: string;
-  thumbnail: string;
-  url?: string;
+  id: string | number
+  title: string
+  thumbnail: string
+  url?: string
 }
 
 interface MangaGridProps {
-  mangas: MangaItem[];
-  onMangaClick?: (manga: MangaItem) => void;
-  className?: string;
-  emptyMessage?: string;
+  mangas: MangaItem[]
+  onMangaClick?: (manga: MangaItem) => void
+  onMangaDelete?: (manga: MangaItem) => void
+  className?: string
+  emptyMessage?: string
 }
 
 const MangaGrid: React.FC<MangaGridProps> = ({
   mangas,
   onMangaClick,
+  onMangaDelete,
   className = "",
   emptyMessage = "No manga found",
 }) => {
   if (mangas.length === 0) {
     return (
-      <div
-        className={`flex flex-col items-center justify-center py-16 ${className}`}
-      >
+      <div className={`flex flex-col items-center justify-center py-16 ${className}`}>
         <div className="text-center">
           <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
-            <svg
-              className="w-12 h-12 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -42,15 +37,11 @@ const MangaGrid: React.FC<MangaGridProps> = ({
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-600 mb-2">
-            {emptyMessage}
-          </h3>
-          <p className="text-gray-500">
-            Start adding your favorite manga to see them here
-          </p>
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">{emptyMessage}</h3>
+          <p className="text-gray-500">Start adding your favorite manga to see them here</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -64,10 +55,11 @@ const MangaGrid: React.FC<MangaGridProps> = ({
           thumbnail={manga.thumbnail}
           url={manga.url}
           onClick={() => onMangaClick?.(manga)}
+          onDelete={onMangaDelete ? () => onMangaDelete(manga) : undefined}
         />
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default MangaGrid;
+export default MangaGrid

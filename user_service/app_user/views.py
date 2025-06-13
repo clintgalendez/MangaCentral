@@ -35,8 +35,19 @@ class UserRegistrationView(APIView):
 @method_decorator(csrf_exempt, name='dispatch')
 class UserLoginView(APIView):
     def post(self, request):
+        print("Request data:", request.data)  # This is fine
+        # Remove the request.body line - it causes the error
+        
         username = request.data.get('username')
         password = request.data.get('password')
+        
+        print(f"Username: {username}, Password: {password}")  # Debug line
+        
+        if not username or not password:
+            return Response(
+                {"error": "Username and password are required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         user = authenticate(username=username, password=password)
 
