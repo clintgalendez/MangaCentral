@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Navigation from "@/components/dashboardpage/Navigation";
 import AddMangaForm from "@/components/dashboardpage/AddMangaForm";
 import MangaGrid from "@/components/ui/MangaGrid";
@@ -104,8 +104,13 @@ const DashboardPage: React.FC = () => {
         });
       }
     } catch (err) {
+      const isDev = import.meta.env.MODE === "development";
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to add manga";
+        isDev
+          ? err instanceof Error
+            ? err.message
+            : "Failed to add manga"
+          : "Failed to add manga. Please try again.";
       error({
         title: "Error Adding Manga",
         message: errorMessage,
@@ -116,29 +121,35 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  const handleDeleteManga = async (manga: MangaItem) => {
-  if (!window.confirm(`Delete "${manga.title}" from your collection?`)) return;
-  try {
-    await mangaApi.deleteManga(String(manga.id));
-    setMangaList(prev => prev.filter(item => item.id !== manga.id));
-    success({
-      title: "Manga Deleted",
-      message: `"${manga.title}" has been removed from your collection.`,
-    });
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Failed to delete manga";
-    error({
-      title: "Error Deleting Manga",
-      message: errorMessage,
-    });
-  }
-};
+  const handleDeleteManga = useCallback(async (manga: MangaItem) => {
+    if (!window.confirm(`Delete "${manga.title}" from your collection?`)) return;
+    try {
+      await mangaApi.deleteManga(String(manga.id));
+      setMangaList(prev => prev.filter(item => item.id !== manga.id));
+      success({
+        title: "Manga Deleted",
+        message: `"${manga.title}" has been removed from your collection.`,
+      });
+    } catch (err) {
+      const isDev = import.meta.env.MODE === "development";
+      const errorMessage =
+        isDev
+          ? err instanceof Error
+            ? err.message
+            : "Failed to delete manga"
+          : "Failed to delete manga. Please try again.";
+      error({
+        title: "Error Deleting Manga",
+        message: errorMessage,
+      });
+    }
+  }, [setMangaList, success, error]);
 
-  const handleMangaClick = (manga: MangaItem) => {
+  const handleMangaClick = useCallback((manga: MangaItem) => {
     if (manga.url) {
       window.open(manga.url, "_blank", "noopener,noreferrer");
     }
-  };
+  }, []);
 
   const openSupportedSitesModal = () => {
     setShowSupportedSites(true)
