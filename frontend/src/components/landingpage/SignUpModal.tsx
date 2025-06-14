@@ -79,13 +79,14 @@ const SignupModal: React.FC<SignupModalProps> = ({
   };
 
   const handleInputChange = (field: string, value: string) => {
+    if (formData[field as keyof typeof formData] === value) return;
+
     setFormData((prev) => ({ ...prev, [field]: value }));
 
     if (field === "password") {
       setPasswordStrength(calculatePasswordStrength(value));
     }
 
-    // Clear field error when user starts typing
     if (errors[field]) {
       clearFieldError(field);
     }
@@ -139,6 +140,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
       });
       onClose();
     } catch (err) {
+      const isDev = import.meta.env.MODE === "development";
       const apiError = err as ApiError;
 
       if (apiError.errors) {
@@ -152,8 +154,9 @@ const SignupModal: React.FC<SignupModalProps> = ({
 
       error({
         title: "Sign Up Failed",
-        message:
-          apiError.message || "Unable to create account. Please try again.",
+        message: isDev
+          ? apiError.message || "Unable to create account. Please try again."
+          : "Sign up failed. Please check your details and try again.",
       });
     } finally {
       setIsLoading(false);
