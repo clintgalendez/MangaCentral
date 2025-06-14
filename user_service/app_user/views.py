@@ -3,17 +3,18 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.throttling import ScopedRateThrottle
 
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate
+from django.core.cache import cache
 
 from .serializers import UserRegistrationSerializer, UserDetailSerializer
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class UserRegistrationView(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'register'
+
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -32,8 +33,10 @@ class UserRegistrationView(APIView):
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-@method_decorator(csrf_exempt, name='dispatch')
 class UserLoginView(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'login'
+
     def post(self, request):        
         username = request.data.get('username')
         password = request.data.get('password')
@@ -69,7 +72,8 @@ class UserLogoutView(APIView):
 
     def post(self, request):
         try:
-            # Delete the token to log the user out
+            cache_key = f"user_detail_{request.user.id}"
+            cache.delete(cache_key)
             request.user.auth_token.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
@@ -79,5 +83,10 @@ class UserDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = UserDetailSerializer(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        cache_key = f"user_detail_{request.user.id}"
+        user_data = cache.get(cache_key)
+        if not user_data:
+            serializer = UserDetailSerializer(request.user)
+            user_data = serializer.data
+            cache.set(cache_key, user_data, timeout=60 * 5)
+        return Response(user_data, status=status.HTTP_200_OK)
