@@ -16,11 +16,11 @@ services:
     networks:
       - manga_network
 
-  user_service:
+  user-service:
     build:
       context: ./user_service
       dockerfile: Dockerfile
-    command: sh -c "pip install -r requirements.txt && python manage.py migrate && gunicorn project_user.wsgi:application --bind 0.0.0.0:8000 --reload" # Added --reload
+    command: sh -c "pip install -r requirements.txt && python manage.py migrate && gunicorn project_user.wsgi:application --bind 0.0.0.0:8000 --reload"
     volumes:
       - ./user_service:/app 
     ports:
@@ -28,7 +28,7 @@ services:
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_USER_SERVICE_SECRET_KEY}
       - DEBUG=${DEBUG}
-      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 user_service
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 user-service # Updated to user-service
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
@@ -36,7 +36,7 @@ services:
       - MYSQL_PORT=3306
     depends_on:
       - mysql_db
-    container_name: manga_central_user_service
+    container_name: manga_central_user-service # Updated container name
     restart: unless-stopped
     networks:
       - manga_network
@@ -60,6 +60,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_HOST=mysql_db
       - MYSQL_PORT=3306
+      - USER_SERVICE_VALIDATE_TOKEN_URL=http://user-service:8000/api/user/me/ # Updated to user-service
     depends_on:
       - mysql_db
     container_name: manga_central_bookmark_service
