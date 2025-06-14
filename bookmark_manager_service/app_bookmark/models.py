@@ -24,8 +24,8 @@ class SupportedSite(models.Model):
 class Bookmark(models.Model):
     """Model to store user bookmarks with scraped data"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.IntegerField() 
-    url = models.URLField(validators=[URLValidator()])
+    user_id = models.IntegerField(db_index=True)
+    url = models.URLField(max_length=767, validators=[URLValidator()])
     title = models.CharField(max_length=500)
     thumbnail = models.ImageField(upload_to=bookmark_thumbnail_path, null=True, blank=True)
     thumbnail_url = models.URLField(null=True, blank=True) 
@@ -49,10 +49,10 @@ class ScrapingLog(models.Model):
     ]
     
     bookmark = models.ForeignKey(Bookmark, on_delete=models.CASCADE, null=True, blank=True)
-    url = models.URLField()
+    url = models.URLField(max_length=767, validators=[URLValidator()])
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     error_message = models.TextField(null=True, blank=True)
-    scraping_duration = models.FloatField(null=True, blank=True)  # in seconds
+    scraping_duration = models.FloatField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
