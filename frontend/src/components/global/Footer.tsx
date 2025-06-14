@@ -1,5 +1,5 @@
 import React from "react";
-import { BookOpen, Github, Mail, Heart } from "lucide-react";
+import { BookOpen, Github, Heart } from "lucide-react";
 
 const Footer: React.FC = () => {
   return (
@@ -24,16 +24,12 @@ const Footer: React.FC = () => {
               </p>
               <div className="flex items-center space-x-4">
                 <a
-                  href="#"
+                  href="https://github.com/clintgalendez"
                   className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-110"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   <Github className="w-5 h-5" />
-                </a>
-                <a
-                  href="#"
-                  className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-110"
-                >
-                  <Mail className="w-5 h-5" />
                 </a>
               </div>
             </div>
