@@ -39,17 +39,13 @@ interface SupportedSite {
 
 export const mangaApi = {
   async addManga(url: string): Promise<AddMangaResponse | { detail: string; task_id: string }> {
-    const userId = localStorage.getItem('user_id');
     const token = localStorage.getItem('token');
-    if (!userId) throw new Error("User ID not found. Please log in again.");
+    if (!token) throw new Error("Authentication token not found. Please log in again.");
 
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
-      'X-User-ID': userId,
+      'Authorization': `Token ${token}`,
     };
-    if (token) {
-      // headers['Authorization'] = `Token ${token}`;
-    }
 
     const response = await fetch(`${API_BASE_URL}/bookmarks/`, {
       method: 'POST',
@@ -59,7 +55,7 @@ export const mangaApi = {
 
     // If 202 Accepted, return task_id for polling
     if (response.status === 202) {
-      return await response.json(); // { detail, task_id }
+      return await response.json();
     }
 
     if (!response.ok) {
@@ -87,16 +83,16 @@ export const mangaApi = {
   },
 
   async getTaskStatus(taskId: string): Promise<{ status: string }> {
-    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}/status/`); // Added trailing slash
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}/status/`);
     if (!response.ok) throw new Error("Failed to check task status");
     return await response.json();
   },
 
   async getMangaList(): Promise<PaginatedResponse<MangaBookmark>> {
-    const userId = localStorage.getItem('user_id');
-
-    if (!userId) {
-      console.error("User ID not found for getMangaList. Returning empty list.");
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      console.error("Authentication token not found for getMangaList. Returning empty list.");
       return {
         count: 0,
         next: null,
@@ -107,14 +103,10 @@ export const mangaApi = {
 
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
-      'X-User-ID': userId,
+      'Authorization': `Token ${token}`,
     };
-    const token = localStorage.getItem('token');
-    if (token) {
-      // headers['Authorization'] = `Token ${token}`;
-    }
     
-    const response = await fetch(`${API_BASE_URL}/bookmarks/?user_id=${userId}`, {
+    const response = await fetch(`${API_BASE_URL}/bookmarks/`, {
       method: 'GET',
       headers: headers,
     });
@@ -127,17 +119,13 @@ export const mangaApi = {
   },
 
   async deleteManga(id: string): Promise<void> {
-    const userId = localStorage.getItem('user_id');
-    if (!userId) throw new Error("User ID not found. Please log in again.");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error("Authentication token not found. Please log in again.");
 
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
-      'X-User-ID': userId,
+      'Authorization': `Token ${token}`,
     };
-    const token = localStorage.getItem('token');
-    if (token) {
-      // headers['Authorization'] = `Token ${token}`;
-    }
 
     const response = await fetch(`${API_BASE_URL}/bookmarks/${id}/`, {
       method: 'DELETE',
@@ -166,4 +154,29 @@ export const mangaApi = {
     }
     return await response.json();
   },
+
+  async refreshManga(bookmarkId: string): Promise<{ detail: string; task_id: string }> {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error("Authentication token not found. Please log in again.");
+
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`,
+    };
+
+    const response = await fetch(`${API_BASE_URL}/bookmarks/${bookmarkId}/refresh/`, {
+      method: 'POST',
+      headers: headers,
+    });
+
+    if (!response.ok) {
+      let backendMessage = `Failed to refresh manga. Status: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        if (errorData && errorData.detail) backendMessage = errorData.detail;
+      } catch {}
+      throw new Error(backendMessage);
+    }
+    return await response.json();
+  }
 };
