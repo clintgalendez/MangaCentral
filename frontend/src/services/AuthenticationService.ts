@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8001/api/user";
+const API_BASE_URL = import.meta.env.VITE_USER_API_BASE_URL
 
 export interface SignUpRequest {
   username: string;
