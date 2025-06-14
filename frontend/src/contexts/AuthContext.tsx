@@ -61,7 +61,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Store token and user data
       localStorage.setItem("token", response.token);
       localStorage.setItem("user", JSON.stringify(response.user_info));
-      localStorage.setItem("user_id", response.user_info.id.toString()); // Add this line
 
       setToken(response.token);
       setUser(response.user_info);
@@ -81,7 +80,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Store token and user data
       localStorage.setItem("token", response.token);
       localStorage.setItem("user", JSON.stringify(response.user_info));
-      localStorage.setItem("user_id", response.user_info.id.toString()); 
 
       setToken(response.token);
       setUser(response.user_info);
@@ -100,7 +98,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Clear local storage and state
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      localStorage.removeItem("user_id");
       setToken(null);
       setUser(null);
     }
