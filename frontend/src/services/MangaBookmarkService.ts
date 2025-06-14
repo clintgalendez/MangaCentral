@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8002';
+const API_BASE_URL = import.meta.env.VITE_BOOKMARK_API_BASE_URL
 
 interface MangaBookmark {
   id: string; 
