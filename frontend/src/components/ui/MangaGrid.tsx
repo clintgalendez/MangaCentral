@@ -1,4 +1,4 @@
-import type React from "react"
+import React from "react"
 import MangaCard from "@/components/ui/MangaCard"
 
 interface MangaItem {
@@ -16,7 +16,7 @@ interface MangaGridProps {
   emptyMessage?: string
 }
 
-const MangaGrid: React.FC<MangaGridProps> = ({
+const MangaGrid: React.FC<MangaGridProps> = React.memo(({
   mangas,
   onMangaClick,
   onMangaDelete,
@@ -60,6 +60,6 @@ const MangaGrid: React.FC<MangaGridProps> = ({
       ))}
     </div>
   )
-}
+});
 
 export default MangaGrid
