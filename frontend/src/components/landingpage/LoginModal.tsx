@@ -51,10 +51,13 @@ const LoginModal: React.FC<LoginModalProps> = ({
       setRememberMe(false);
       onClose();
     } catch (err) {
+      const isDev = import.meta.env.MODE === "development";
       const apiError = err as ApiError;
       error({
         title: "Login Failed",
-        message: apiError.message || "Invalid credentials. Please try again.",
+        message: isDev
+          ? apiError.message || "Invalid credentials. Please try again."
+          : "Login failed. Please check your credentials and try again.",
       });
     } finally {
       setIsLoading(false);
