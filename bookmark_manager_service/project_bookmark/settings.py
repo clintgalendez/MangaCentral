@@ -34,6 +34,16 @@ CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://redis:6379/0')
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_TIMEZONE = 'Asia/Manila'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get('REDIS_CACHE_URL', "redis://redis:6379/1"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,7 +64,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'app_bookmark.authentication.UserServiceTokenAuthentication',
+    ]
 }
+
+USER_SERVICE_VALIDATE_TOKEN_URL = os.environ.get('USER_SERVICE_VALIDATE_TOKEN_URL', 'http://localhost:8001/api/user/me/')
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,7 +98,6 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
-    'x-user-id',
     'task-id',
 ]
 
@@ -117,7 +132,7 @@ DATABASES = {
         'NAME': os.environ.get('MYSQL_DATABASE'),
         'USER': os.environ.get('MYSQL_USER'),
         'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
-        'HOST': os.environ.get('MYSQL_HOST', 'mysql_db'), # Service name from docker-compose
+        'HOST': os.environ.get('MYSQL_HOST', 'mysql_db'),
         'PORT': os.environ.get('MYSQL_PORT', '3306'),
     }
 }
