@@ -5,30 +5,14 @@ from django.shortcuts import get_object_or_404
 from .models import Bookmark, SupportedSite
 from .serializers import BookmarkSerializer, BookmarkCreateSerializer, SupportedSiteSerializer
 from .tasks import scrape_manga_info_task
-from urllib.parse import urlparse
 from celery.result import AsyncResult
-import requests
-
-def get_user_id_from_request(request):
-    """Extract user ID from request headers or session"""
-    user_id = request.META.get('HTTP_X_USER_ID')
-    if not user_id:
-        raise ValueError("User ID not provided in request")
-    return int(user_id)
-
-def verify_user_exists(user_id):
-    """Verify user exists by calling user service"""
-    try:
-        # This would be the actual user service URL in production
-        # For now, we'll assume the user exists
-        # response = requests.get(f"http://user_service:8000/api/users/{user_id}/")
-        # return response.status_code == 200
-        return True
-    except:
-        return False
+from django.views.decorators.cache import cache_page
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
 class BookmarkListCreateView(generics.ListCreateAPIView):
     serializer_class = BookmarkSerializer
+    permission_classes = [IsAuthenticated] # Require authentication
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -36,25 +20,11 @@ class BookmarkListCreateView(generics.ListCreateAPIView):
         return context
 
     def get_queryset(self):
-        user_id = self.request.query_params.get('user_id')
-        if user_id:
-            return Bookmark.objects.filter(user_id=user_id).order_by('-created_at')
-        return Bookmark.objects.none()
+        # request.user will be SimpleAuthenticatedUser if authentication was successful
+        return Bookmark.objects.filter(user_id=self.request.user.id).order_by('-created_at')
 
     def create(self, request, *args, **kwargs):
-        try:
-            user_id = get_user_id_from_request(request)
-        except ValueError as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if not verify_user_exists(user_id):
-            return Response(
-                {"error": "User not found"},
-                status=status.HTTP_404_NOT_FOUND
-            )
+        user_id = request.user.id # Get user_id from authenticated user
 
         serializer = BookmarkCreateSerializer(data=request.data)
         if not serializer.is_valid():
@@ -65,7 +35,7 @@ class BookmarkListCreateView(generics.ListCreateAPIView):
         existing_bookmark = Bookmark.objects.filter(user_id=user_id, url=url).first()
         if existing_bookmark:
             return Response(
-                BookmarkSerializer(existing_bookmark).data,
+                BookmarkSerializer(existing_bookmark, context={'request': request}).data, # Pass context
                 status=status.HTTP_200_OK
             )
 
@@ -77,13 +47,13 @@ class BookmarkListCreateView(generics.ListCreateAPIView):
 
 class BookmarkDetailView(generics.RetrieveDestroyAPIView):
     serializer_class = BookmarkSerializer
+    permission_classes = [IsAuthenticated] # Require authentication
 
     def get_queryset(self):
-        user_id = get_user_id_from_request(self.request)
-        return Bookmark.objects.filter(user_id=user_id)
+        return Bookmark.objects.filter(user_id=self.request.user.id)
 
     def destroy(self, request, *args, **kwargs):
-        user_id = get_user_id_from_request(request)
+        user_id = request.user.id # Get user_id from authenticated user
         instance = self.get_object()
         if instance.user_id != user_id:
             return Response({"error": "You do not have permission to delete this bookmark."},
@@ -92,12 +62,15 @@ class BookmarkDetailView(generics.RetrieveDestroyAPIView):
         return Response({"detail": "Bookmark deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def task_status(request, task_id):
+    
     """Get Celery task status by task_id"""
     result = AsyncResult(task_id)
     return Response({"status": result.status})
 
 @api_view(['GET'])
+@cache_page(60 * 15)
 def supported_sites(request):
     """Get list of supported manga sites"""
     sites = SupportedSite.objects.filter(is_active=True)
@@ -105,12 +78,10 @@ def supported_sites(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def refresh_bookmark(request, bookmark_id):
     """Re-scrape bookmark data asynchronously"""
-    try:
-        user_id = get_user_id_from_request(request)
-    except ValueError as e:
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    user_id = request.user.id # Get user_id from authenticated user
 
     bookmark = get_object_or_404(Bookmark, id=bookmark_id, user_id=user_id)
 
