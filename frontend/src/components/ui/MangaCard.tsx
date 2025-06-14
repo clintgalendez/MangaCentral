@@ -1,4 +1,4 @@
-import type React from "react"
+import React from "react"
 import { ExternalLink, BookOpen, Trash2 } from "lucide-react"
 
 interface MangaCardProps {
@@ -11,7 +11,7 @@ interface MangaCardProps {
   className?: string
 }
 
-const MangaCard: React.FC<MangaCardProps> = ({ title, thumbnail, url, onClick, onDelete, className = "" }) => {
+const MangaCard: React.FC<MangaCardProps> = React.memo(({ title, thumbnail, url, onClick, onDelete, className = "" }) => {
   const handleClick = () => {
     if (onClick) {
       onClick()
@@ -50,6 +50,7 @@ const MangaCard: React.FC<MangaCardProps> = ({ title, thumbnail, url, onClick, o
             <img
               src={thumbnail || "/placeholder.svg"}
               alt={title}
+              loading="lazy"
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               onError={handleImageError}
             />
@@ -103,6 +104,6 @@ const MangaCard: React.FC<MangaCardProps> = ({ title, thumbnail, url, onClick, o
       <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
     </div>
   )
-}
+});
 
 export default MangaCard
