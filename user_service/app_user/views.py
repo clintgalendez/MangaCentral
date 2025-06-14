@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate
 
-from .serializers import UserRegistrationSerializer
+from .serializers import UserRegistrationSerializer, UserDetailSerializer
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -34,15 +34,10 @@ class UserRegistrationView(APIView):
     
 @method_decorator(csrf_exempt, name='dispatch')
 class UserLoginView(APIView):
-    def post(self, request):
-        print("Request data:", request.data)  # This is fine
-        # Remove the request.body line - it causes the error
-        
+    def post(self, request):        
         username = request.data.get('username')
         password = request.data.get('password')
-        
-        print(f"Username: {username}, Password: {password}")  # Debug line
-        
+                
         if not username or not password:
             return Response(
                 {"error": "Username and password are required"},
@@ -79,3 +74,10 @@ class UserLogoutView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserDetailSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
