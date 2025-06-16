@@ -144,4 +144,3 @@ docker run -p 5173:5173 manga-central-frontend
 ```
 This will typically expose the application on port 5173. If you are using the `nginx.conf` provided, the Nginx server within the container will serve the built static files, usually on port 80 (which can be mapped to a host port). The current `Dockerfile` sets up a development server. For production, you'd typically build the static assets and serve them with a web server like Nginx.
 The `EXPOSE 5173` line in the Dockerfile suggests it's set up for the Vite development server. For a production build served by Nginx, the Dockerfile would need to be adjusted to build the app and then use an Nginx base image to serve the `dist` folder.
-```
