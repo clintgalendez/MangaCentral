@@ -107,7 +107,7 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 ## License
 
-[MIT](LICENSE) (or specify your license here)
+[MIT](LICENSE)
 
 ---
 
@@ -117,4 +117,3 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 - [Django](https://www.djangoproject.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Lucide Icons](https://lucide.dev/)
--
