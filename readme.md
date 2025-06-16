@@ -27,9 +27,9 @@ Manga Central is a web application that helps users collect, organize, and acces
 └── readme                     # Additional documentation
 ```
 
-- See [frontend/readme](frontend/readme) for frontend details.
-- See [user_service/readme](user_service/readme) for user service details.
-- See [bookmark_manager_service/readme](bookmark_manager_service/readme) for bookmark manager details.
+- See [frontend/readme](frontend/readme.md) for frontend details.
+- See [user_service/readme](user_service/readme.md) for user service details.
+- See [bookmark_manager_service/readme](bookmark_manager_service/readme.md) for bookmark manager details.
 
 ---
 
