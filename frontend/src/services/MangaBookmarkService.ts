@@ -83,7 +83,18 @@ export const mangaApi = {
   },
 
   async getTaskStatus(taskId: string): Promise<{ status: string }> {
-    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}/status/`);
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error("Authentication token not found. Please log in again.");
+
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`,
+    };
+
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}/status/`, {
+      method: 'GET',
+      headers,
+    });
     if (!response.ok) throw new Error("Failed to check task status");
     return await response.json();
   },
